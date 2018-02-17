@@ -28,9 +28,10 @@
     return templateCardElement;
   }
 
-  window.render = function (newData) {
+  window.successHundler = function (newData) {
     for (var j = 0; j < newData.length; j++) {
       window.map.insertBefore(addCard(newData[j]), mapFiltersContainer);
     }
   };
+  window.load(window.successHundler, window.errorHandler);
 })();
