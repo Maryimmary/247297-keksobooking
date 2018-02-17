@@ -1,7 +1,6 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Mary K](https://up.htmlacademy.ru/javascript/12/user/247297).
-* Наставник: `Неизвестно`.
 
 ---
 
