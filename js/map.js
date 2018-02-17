@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-  
   var ESC_KEYCODE = 27;
   var mainPin = document.querySelector('.map__pin--main');
   var noticeForm = document.querySelector('.notice__form');
