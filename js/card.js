@@ -22,7 +22,7 @@
     paragraphs[2].textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей ';
     paragraphs[3].textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     paragraphs[4].textContent = data.offer.description;
-    templateCardElement.querySelector('.popup__pictures').querySelector('img').src = [];
+    templateCardElement.querySelector('.popup__pictures').querySelector('img').src = data.offer.photos;
     templateCardElement.querySelector('.popup__features').innerHTML = '';
     createElement(featuresList, templateCardElement.querySelector('.popup__features'), data.offer.features);
     return templateCardElement;
