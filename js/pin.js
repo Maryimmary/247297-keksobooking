@@ -11,7 +11,6 @@
     return templatePinElement;
   }
 
-
   window.render = function (newData) {
     for (var j = 0; j < newData.length; j++) {
       window.mapPins.appendChild(addButton(newData[j]));

@@ -3,10 +3,20 @@
   window.map = document.querySelector('.map');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-  function createElement(element, parent, array) {
+  function createFeatureElement(element, parent, array) {
     for (var i = 0; i < array.length; i++) {
       element[i].className = 'feature feature--' + array[i];
       parent.appendChild(element[i]);
+    }
+  }
+
+  function createImgElement(array, parent) {
+    for (var i = 0; i < array.length; i++) {
+      var li = document.createElement('li');
+      var img = document.createElement('img');
+      img.setAttribute('style', 'width: auto; height: 100px');
+      li.appendChild(img).src = array[i];
+      parent.appendChild(li);
     }
   }
 
@@ -22,9 +32,10 @@
     paragraphs[2].textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей ';
     paragraphs[3].textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     paragraphs[4].textContent = data.offer.description;
-    templateCardElement.querySelector('.popup__pictures').querySelector('img').src = data.offer.photos;
+    templateCardElement.querySelector('.popup__pictures').innerHTML = '';
+    createImgElement(data.offer.photos, templateCardElement.querySelector('.popup__pictures'));
     templateCardElement.querySelector('.popup__features').innerHTML = '';
-    createElement(featuresList, templateCardElement.querySelector('.popup__features'), data.offer.features);
+    createFeatureElement(featuresList, templateCardElement.querySelector('.popup__features'), data.offer.features);
     return templateCardElement;
   }
 

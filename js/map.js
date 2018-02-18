@@ -51,8 +51,9 @@
   // ПЕРЕНОС ГЛАВНОГО ПИНА
   var MAIN_PIN_LEFT_SHIFT = 31;
   var MAIN_PIN_TOP_SHIFT = 84;
-  var MIN_TOP_OFFSET = 100;
+  var MIN_TOP_OFFSET = 150;
   var MIN_BOTTOM_OFFSET = 500;
+  var MIN_LEFT_OFFSET = 62;
 
   address.value = 'x: ' + (mainPin.offsetLeft + MAIN_PIN_LEFT_SHIFT) + ', y: ' + (mainPin.offsetTop + MAIN_PIN_TOP_SHIFT);
 
@@ -79,9 +80,10 @@
       var topPosition = mainPin.offsetTop - shift.y + MAIN_PIN_TOP_SHIFT;
 
       var currentY = Math.max(MIN_TOP_OFFSET, Math.min(MIN_BOTTOM_OFFSET, topPosition));
-      address.value = 'x: ' + leftPosition + ', y: ' + currentY;
+      var currentX = Math.max(MIN_LEFT_OFFSET, Math.min(mainPin.parentElement.style.width, leftPosition));
+      address.value = 'x: ' + currentX + ', y: ' + currentY;
 
-      mainPin.style.left = leftPosition - MAIN_PIN_LEFT_SHIFT + 'px';
+      mainPin.style.left = currentX - MAIN_PIN_LEFT_SHIFT + 'px';
       mainPin.style.top = currentY - MAIN_PIN_TOP_SHIFT + 'px';
     };
 
