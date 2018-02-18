@@ -49,21 +49,24 @@
   window.map.addEventListener('click', closePopup);
 
   // ПЕРЕНОС ГЛАВНОГО ПИНА
-  var MAIN_PIN_LEFT_SHIFT = 31;
-  var MAIN_PIN_TOP_SHIFT = 84;
-  var MIN_TOP_OFFSET = 150;
-  var MIN_BOTTOM_OFFSET = 500;
-  var MIN_LEFT_OFFSET = 62;
+  var MAIN_PIN_LEFT_SHIFT = mainPin.style.width / 2;
+  var MAIN_PIN_TOP_SHIFT = +mainPin.style.height + 22;
+  var MIN_Y_POSITION = 150;
+  var MAX_Y_POSITION = 500;
+  var MIN_X_POSITION = 55;
+  var MAX_X_POSITION = 1145;
 
   address.value = 'x: ' + (mainPin.offsetLeft + MAIN_PIN_LEFT_SHIFT) + ', y: ' + (mainPin.offsetTop + MAIN_PIN_TOP_SHIFT);
 
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
+
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
-    var onMouseMove = function (moveEvt) {
+
+    function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
 
       var shift = {
@@ -76,22 +79,22 @@
         y: moveEvt.clientY
       };
 
-      var leftPosition = mainPin.offsetLeft - shift.x + MAIN_PIN_LEFT_SHIFT;
-      var topPosition = mainPin.offsetTop - shift.y + MAIN_PIN_TOP_SHIFT;
+      var leftPosition = mainPin.offsetLeft - shift.x;
+      var topPosition = mainPin.offsetTop - shift.y;
 
-      var currentY = Math.max(MIN_TOP_OFFSET, Math.min(MIN_BOTTOM_OFFSET, topPosition));
-      var currentX = Math.max(MIN_LEFT_OFFSET, Math.min(mainPin.parentElement.style.width, leftPosition));
-      address.value = 'x: ' + currentX + ', y: ' + currentY;
+      var currentY = Math.max(MIN_Y_POSITION, Math.min(MAX_Y_POSITION, topPosition));
+      var currentX = Math.max(MIN_X_POSITION, Math.min(MAX_X_POSITION, leftPosition));
+      address.value = 'x: ' + (currentX + MAIN_PIN_LEFT_SHIFT) + ', y: ' + (currentY + MAIN_PIN_TOP_SHIFT);
 
-      mainPin.style.left = currentX - MAIN_PIN_LEFT_SHIFT + 'px';
-      mainPin.style.top = currentY - MAIN_PIN_TOP_SHIFT + 'px';
-    };
+      mainPin.style.left = currentX + 'px';
+      mainPin.style.top = currentY + 'px';
+    }
 
-    var onMouseUp = function (upEvt) {
+    function onMouseUp(upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-    };
+    }
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
