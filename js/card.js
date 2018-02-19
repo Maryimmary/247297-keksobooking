@@ -1,8 +1,5 @@
 'use strict';
 (function () {
-  window.map = document.querySelector('.map');
-  var mapFiltersContainer = document.querySelector('.map__filters-container');
-
   function createFeatureElement(element, parent, array) {
     for (var i = 0; i < array.length; i++) {
       element[i].className = 'feature feature--' + array[i];
@@ -20,8 +17,8 @@
     }
   }
 
-  function addCard(data) {
-    var templateCardElement = window.templateElement.querySelector('.map__card').cloneNode(true);
+  window.addCard = function (data) {
+    var templateCardElement = document.querySelector('template').content.querySelector('.map__card').cloneNode(true);
     var featuresList = templateCardElement.querySelectorAll('ul:first-of-type li');
     var paragraphs = templateCardElement.querySelectorAll('p');
     templateCardElement.querySelector('.popup__avatar').src = data.author.avatar;
@@ -37,12 +34,5 @@
     templateCardElement.querySelector('.popup__features').innerHTML = '';
     createFeatureElement(featuresList, templateCardElement.querySelector('.popup__features'), data.offer.features);
     return templateCardElement;
-  }
-
-  window.successHundler = function (newData) {
-    for (var j = 0; j < newData.length; j++) {
-      window.map.insertBefore(addCard(newData[j]), mapFiltersContainer);
-    }
   };
-  window.load(window.successHundler, window.errorHandler);
 })();

@@ -1,14 +1,31 @@
 'use strict';
 (function () {
   var ESC_KEYCODE = 27;
+
+  var map = document.querySelector('.map');
+  var mapFiltersContainer = document.querySelector('.map__filters-container');
+  var mapPins = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
+
+  function successHandler(data) {
+    for (var i = 0; i < data.length; i++) {
+      map.insertBefore(window.addCard(data[i]), mapFiltersContainer);
+      mapPins.appendChild(window.addPin(data[i]));
+    }
+  }
+
+  window.load(successHandler, window.errorHandler);
+
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormElement = document.querySelectorAll('.notice__form fieldset');
   var address = document.querySelector('#address');
 
+  var mapPin = document.querySelectorAll('.map .map__pin:not(.map__pin--main)');
+  var popup = document.querySelectorAll('.map__card');
+
   // Клик на главную кнопку
   function onButtonClick() {
-    window.map.classList.remove('map--faded');
+    map.classList.remove('map--faded');
     noticeForm.classList.remove('notice__form--disabled');
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = false;
@@ -16,7 +33,7 @@
     });
 
     for (var i = 0; i < Math.min(window.mapPin.length, 5); i++) {
-      window.mapPin[i].style.display = 'block';
+      mapPin[i].style.display = 'block';
     }
   }
 
@@ -42,13 +59,13 @@
     }
   }
 
-  window.mapPins.addEventListener('click', window.showCard);
+  mapPins.addEventListener('click', window.showCard);
   document.addEventListener('keydown', onPopupEscPress);
   mainPin.addEventListener('mouseup', onButtonClick);
   mainPin.addEventListener('click', onButtonClick);
-  window.map.addEventListener('click', closePopup);
+  map.addEventListener('click', closePopup);
 
-  // ПЕРЕНОС ГЛАВНОГО ПИНА
+  /* ПЕРЕНОС ГЛАВНОГО ПИНА
   var MAIN_PIN_LEFT_SHIFT = mainPin.style.width / 2;
   var MAIN_PIN_TOP_SHIFT = +mainPin.style.height + 22;
   var MIN_Y_POSITION = 150;
@@ -99,7 +116,7 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  /* Управление фильтрами*/
+  /* Управление фильтрами
 
   var filterForm = document.querySelector('.map__filters');
   // var selectFeatures = filterForm.querySelectorAll('.map__filter');
@@ -155,12 +172,5 @@
       filterData(pinsData[i], window.mapPins[i]);
     }
   });
-
-  function successHandler(data) {
-    pinsData = data;
-    window.render(pinsData);
-  }
-
-  window.load(successHandler, window.errorHandler);
-
+*/
 })();
