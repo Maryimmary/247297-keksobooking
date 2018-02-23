@@ -31,8 +31,7 @@
       mapPin[i].style.display = 'block';
     }
   }
-
-  // Показ/скрытие карточки объявления
+  // Нажатие на ESC при открытом объявлении
   function onPopupEscPress(event) {
     if (event.keyCode === ESC_KEYCODE) {
       for (var i = 0; i < popup.length; i++) {
@@ -44,6 +43,7 @@
     }
   }
 
+  // Показ/скрытие карточки объявления
   function showCard(event) {
     var target = event.target;
     if (target.className === 'map__pin') {
