@@ -32,16 +32,6 @@
     }
   }
 
-  function closePopup(event) {
-    var target = event.target;
-    for (var i = 0; i < popup.length; i++) {
-      if (target === popup[i].children[1]) {
-        popup[i].style.display = 'none';
-        mapPin[i].classList.remove('map__pin--active');
-      }
-    }
-  }
-
   // Показ/скрытие карточки объявления
   function onPopupEscPress(event) {
     if (event.keyCode === ESC_KEYCODE) {
@@ -64,6 +54,9 @@
     for (var i = 0; i < popup.length; i++) {
       if (mapPin[i].classList.contains('map__pin--active')) {
         popup[i].style.display = 'block';
+      } else if (target === popup[i].children[1]) {
+        popup[i].style.display = 'none';
+        mapPin[i].classList.remove('map__pin--active');
       }
     }
     for (var j = 0; j < popup.length; j++) {
@@ -77,8 +70,6 @@
   map.addEventListener('click', showCard);
   document.addEventListener('keydown', onPopupEscPress);
   window.mainPin.addEventListener('mouseup', onButtonClick);
-  window.mainPin.addEventListener('click', onButtonClick);
-  map.addEventListener('click', closePopup);
 
   /* Управление фильтрами
 
