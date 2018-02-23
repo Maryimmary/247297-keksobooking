@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-  /* function */
   function getRandomNumber(min, max) {
     var rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
@@ -20,7 +19,6 @@
     return Math.random() - 0.5;
   }
 
-  /* Data array */
   var offerTitle = [
     'Большая уютная квартира',
     'Маленькая неуютная квартира',
@@ -47,7 +45,7 @@
     bungalo: 'Бунгало'
   };
 
-  /* Major array */
+  /* Основной массив */
   window.advertisementArray = [];
   var maxLength = 8;
   for (var i = 0; i < maxLength; i++) {
