@@ -70,7 +70,7 @@
         checkin: getRandomNumber(12, 14) + ':00',
         checkout: getRandomNumber(12, 14) + ':00',
         features: getRandomArray(offerFeatures),
-        description: ' ',
+        description: '',
         photos: photos.sort(compareRandom)
       },
 

@@ -85,7 +85,7 @@
   price.addEventListener('change', checkPrice);
   formSubmit.addEventListener('click', checkValidity);
 
-  var successHandler = function () {
+  var successMessage = function () {
     var node = document.createElement('div');
     node.style = 'position: fixed; padding: 10px;' +
       'z-index: 100; top: 50%; left: 50%; transform: translate(-50%, -50%);' +
@@ -100,7 +100,7 @@
   };
 
   noticeForm.addEventListener('submit', function (evt) {
-    window.send(new FormData(noticeForm), successHandler, window.errorHandler);
+    window.send(new FormData(noticeForm), successMessage, window.errorHandler);
     evt.preventDefault();
   });
 })();

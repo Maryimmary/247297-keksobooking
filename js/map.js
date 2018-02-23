@@ -1,100 +1,77 @@
 'use strict';
 (function () {
   var ESC_KEYCODE = 27;
-  var mainPin = document.querySelector('.map__pin--main');
+  var map = document.querySelector('.map');
+  var mapPinsContainer = document.querySelector('.map__container');
+  window.mainPin = document.querySelector('.map__pin--main');
+
+  function successHandler(newData) {
+    for (var i = 0; i < newData.length; i++) {
+      map.insertBefore(window.addCard(newData[i]), map.children[map.children.length - 1]);
+      mapPinsContainer.appendChild(window.addPin(newData[i]));
+    }
+  }
+  window.load(successHandler, window.errorHandler);
+
+  var mapPin = mapPinsContainer.getElementsByTagName('button');
+  var popup = map.getElementsByTagName('article');
+
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormElement = document.querySelectorAll('.notice__form fieldset');
-  var address = document.querySelector('#address');
 
   // Клик на главную кнопку
   function onButtonClick() {
-    window.map.classList.remove('map--faded');
+    map.classList.remove('map--faded');
     noticeForm.classList.remove('notice__form--disabled');
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = false;
       return it;
     });
-
-    for (var i = 0; i < Math.min(window.mapPin.length, 5); i++) {
-      window.mapPin[i].style.display = 'block';
+    for (var i = 0; i < Math.min(popup.length, 5); i++) {
+      mapPin[i].style.display = 'block';
     }
   }
-
-  function closePopup(event) {
-    var target = event.target;
-    for (var i = 0; i < window.popup.length; i++) {
-      if (target === window.popup[i].children[1]) {
-        window.popup[i].style.display = 'none';
-        window.mapPin[i].classList.remove('map__pin--active');
-      }
-    }
-  }
-
-  // Показ/скрытие карточки объявления
+  // Нажатие на ESC при открытом объявлении
   function onPopupEscPress(event) {
     if (event.keyCode === ESC_KEYCODE) {
-      for (var i = 0; i < window.mapPin.length; i++) {
-        if (window.mapPin[i].classList.contains('map__pin--active')) {
-          window.mapPin[i].classList.remove('map__pin--active');
-          window.popup[i].style.display = 'none';
+      for (var i = 0; i < popup.length; i++) {
+        if (mapPin[i].classList.contains('map__pin--active')) {
+          mapPin[i].classList.remove('map__pin--active');
+          popup[i].style.display = 'none';
         }
       }
     }
   }
 
-  window.mapPins.addEventListener('click', window.showCard);
+  // Показ/скрытие карточки объявления
+  function showCard(event) {
+    var target = event.target;
+    if (target.className === 'map__pin') {
+      target.classList.add('map__pin--active');
+    } else if (target.parentNode.className === 'map__pin') {
+      target.parentNode.classList.add('map__pin--active');
+    }
+    for (var i = 0; i < popup.length; i++) {
+      if (mapPin[i].classList.contains('map__pin--active')) {
+        popup[i].style.display = 'block';
+      } else if (target === popup[i].children[1]) {
+        popup[i].style.display = 'none';
+        mapPin[i].classList.remove('map__pin--active');
+      }
+    }
+    for (var j = 0; j < popup.length; j++) {
+      if (mapPin[j].classList.contains('map__pin--active') && mapPin[j] !== target && mapPin[j].firstChild !== target) {
+        mapPin[j].classList.remove('map__pin--active');
+        popup[j].style.display = 'none';
+      }
+    }
+  }
+
+  map.addEventListener('click', showCard);
   document.addEventListener('keydown', onPopupEscPress);
-  mainPin.addEventListener('mouseup', onButtonClick);
-  mainPin.addEventListener('click', onButtonClick);
-  window.map.addEventListener('click', closePopup);
+  window.mainPin.addEventListener('mouseup', onButtonClick);
 
-  // ПЕРЕНОС ГЛАВНОГО ПИНА
-  var MAIN_PIN_LEFT_SHIFT = 31;
-  var MAIN_PIN_TOP_SHIFT = 84;
-  var MIN_TOP_OFFSET = 100;
-  var MIN_BOTTOM_OFFSET = 500;
-
-  address.value = 'x: ' + (mainPin.offsetLeft + MAIN_PIN_LEFT_SHIFT) + ', y: ' + (mainPin.offsetTop + MAIN_PIN_TOP_SHIFT);
-
-  mainPin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      var leftPosition = mainPin.offsetLeft - shift.x + MAIN_PIN_LEFT_SHIFT;
-      var topPosition = mainPin.offsetTop - shift.y + MAIN_PIN_TOP_SHIFT;
-
-      var currentY = Math.max(MIN_TOP_OFFSET, Math.min(MIN_BOTTOM_OFFSET, topPosition));
-      address.value = 'x: ' + leftPosition + ', y: ' + currentY;
-
-      mainPin.style.left = leftPosition - MAIN_PIN_LEFT_SHIFT + 'px';
-      mainPin.style.top = currentY - MAIN_PIN_TOP_SHIFT + 'px';
-    };
-
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
-
-  /* Управление фильтрами*/
+  /* Управление фильтрами
 
   var filterForm = document.querySelector('.map__filters');
   // var selectFeatures = filterForm.querySelectorAll('.map__filter');
@@ -150,12 +127,5 @@
       filterData(pinsData[i], window.mapPins[i]);
     }
   });
-
-  function successHandler(data) {
-    pinsData = data;
-    window.render(pinsData);
-  }
-
-  window.load(successHandler, window.errorHandler);
-
+*/
 })();
