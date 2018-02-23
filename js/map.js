@@ -5,9 +5,12 @@
   var map = document.querySelector('.map');
   var mapPinsContainer = document.querySelector('.map__container');
   window.mainPin = document.querySelector('.map__pin--main');
-  var arrayInfo = [];
+  var arrayItem = [];
 
   function successHandler(newData) {
+    for (var j = 0; j < newData.length; j++) {
+      arrayItem.push(newData[j]);
+    }
     for (var i = 0; i < Math.min(newData.length, MAX_ITEM_COUNT); i++) {
       map.insertBefore(window.addCard(newData[i]), map.children[map.children.length - 1]);
       mapPinsContainer.appendChild(window.addPin(newData[i]));
@@ -122,13 +125,13 @@
       element.style.display = 'none';
     }
   }
-console.log(popup);
+
   filterForm.addEventListener('change', function (evt) {
     var target = evt.target;
     for (var i = 0; i < filterForm.children.length; i++) {
       if (target === filterForm.children[i] || target.tagName === 'INPUT') {
-        for (var j = 0; j < window.data.length; j++) {
-          filterData(window.data[j], mapPin[j]);
+        for (var j = 0; j < arrayItem.length; j++) {
+          filterData(arrayItem[j], mapPin[j]);
         }
       }
     }
