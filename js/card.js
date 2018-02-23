@@ -21,6 +21,7 @@
     var templateCardElement = document.querySelector('template').content.querySelector('.map__card').cloneNode(true);
     var featuresList = templateCardElement.querySelectorAll('ul:first-of-type li');
     var paragraphs = templateCardElement.querySelectorAll('p');
+    templateCardElement.style.display = 'none';
     templateCardElement.querySelector('.popup__avatar').src = data.author.avatar;
     templateCardElement.querySelector('h3').textContent = data.offer.title;
     templateCardElement.querySelector('small').textContent = data.offer.address;

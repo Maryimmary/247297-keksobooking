@@ -1,9 +1,8 @@
 'use strict';
 (function () {
   var ESC_KEYCODE = 27;
-
   var map = document.querySelector('.map');
-  var mapPinsContainer = document.querySelector('.map__pins');
+  var mapPinsContainer = document.querySelector('.map__container');
   window.mainPin = document.querySelector('.map__pin--main');
 
   function successHandler(newData) {
@@ -14,8 +13,8 @@
   }
   window.load(successHandler, window.errorHandler);
 
-  var mapPin = mapPinsContainer.querySelectorAll('.map_a_pin:not(.map__pin--main)');
-  var popup = map.querySelectorAll('.map__card');
+  var mapPin = mapPinsContainer.getElementsByTagName('button');
+  var popup = map.getElementsByTagName('article');
 
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormElement = document.querySelectorAll('.notice__form fieldset');
@@ -28,7 +27,7 @@
       it.disabled = false;
       return it;
     });
-    for (var i = 0; i < Math.min(mapPin.length, 5); i++) {
+    for (var i = 0; i < Math.min(popup.length, 5); i++) {
       mapPin[i].style.display = 'block';
     }
   }
@@ -46,7 +45,7 @@
   // Показ/скрытие карточки объявления
   function onPopupEscPress(event) {
     if (event.keyCode === ESC_KEYCODE) {
-      for (var i = 0; i < mapPin.length; i++) {
+      for (var i = 0; i < popup.length; i++) {
         if (mapPin[i].classList.contains('map__pin--active')) {
           mapPin[i].classList.remove('map__pin--active');
           popup[i].style.display = 'none';
@@ -55,7 +54,27 @@
     }
   }
 
-  mapPinsContainer.addEventListener('click', window.showCard);
+  function showCard(event) {
+    var target = event.target;
+    if (target.className === 'map__pin') {
+      target.classList.add('map__pin--active');
+    } else if (target.parentNode.className === 'map__pin') {
+      target.parentNode.classList.add('map__pin--active');
+    }
+    for (var i = 0; i < popup.length; i++) {
+      if (mapPin[i].classList.contains('map__pin--active')) {
+        popup[i].style.display = 'block';
+      }
+    }
+    for (var j = 0; j < popup.length; j++) {
+      if (mapPin[j].classList.contains('map__pin--active') && mapPin[j] !== target && mapPin[j].firstChild !== target) {
+        mapPin[j].classList.remove('map__pin--active');
+        popup[j].style.display = 'none';
+      }
+    }
+  }
+
+  map.addEventListener('click', showCard);
   document.addEventListener('keydown', onPopupEscPress);
   window.mainPin.addEventListener('mouseup', onButtonClick);
   window.mainPin.addEventListener('click', onButtonClick);

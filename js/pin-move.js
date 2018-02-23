@@ -1,7 +1,7 @@
 'use strict';
 (function () {
-  var MAIN_PIN_LEFT_SHIFT = window.mainPin.style.width / 2;
-  var MAIN_PIN_TOP_SHIFT = +window.mainPin.style.height + 22;
+  var MAIN_PIN_LEFT_SHIFT = 31;
+  var MAIN_PIN_TOP_SHIFT = 84;
   var MIN_Y_POSITION = 150;
   var MAX_Y_POSITION = 500;
   var MIN_X_POSITION = 55;
