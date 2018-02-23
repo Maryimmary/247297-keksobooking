@@ -1,17 +1,18 @@
 'use strict';
 (function () {
   var ESC_KEYCODE = 27;
+  var MAX_ITEM_COUNT = 5;
   var map = document.querySelector('.map');
   var mapPinsContainer = document.querySelector('.map__container');
   window.mainPin = document.querySelector('.map__pin--main');
+  var arrayInfo = [];
 
   function successHandler(newData) {
-    for (var i = 0; i < newData.length; i++) {
+    for (var i = 0; i < Math.min(newData.length, MAX_ITEM_COUNT); i++) {
       map.insertBefore(window.addCard(newData[i]), map.children[map.children.length - 1]);
       mapPinsContainer.appendChild(window.addPin(newData[i]));
     }
   }
-  window.load(successHandler, window.errorHandler);
 
   var mapPin = mapPinsContainer.getElementsByTagName('button');
   var popup = map.getElementsByTagName('article');
@@ -27,10 +28,11 @@
       it.disabled = false;
       return it;
     });
-    for (var i = 0; i < Math.min(popup.length, 5); i++) {
+    for (var i = 0; i < popup.length; i++) {
       mapPin[i].style.display = 'block';
     }
   }
+
   // Нажатие на ESC при открытом объявлении
   function onPopupEscPress(event) {
     if (event.keyCode === ESC_KEYCODE) {
@@ -71,13 +73,13 @@
   document.addEventListener('keydown', onPopupEscPress);
   window.mainPin.addEventListener('mouseup', onButtonClick);
 
-  /* Управление фильтрами
+  // Управление фильтрами
 
   var filterForm = document.querySelector('.map__filters');
-  // var selectFeatures = filterForm.querySelectorAll('.map__filter');
+  // var selectFeatures = filterForm.querySelectorAll('.map__filter'); Все селекты
 
-  var housingFeatures = document.querySelector('#housing-features');
-  var housingFeaturesCheckbox = housingFeatures.querySelectorAll('input');
+  var housingFeatures = document.querySelector('#housing-features'); // Список удобств
+  var housingFeaturesCheckbox = housingFeatures.querySelectorAll('input'); // Чекбоксы удобств
 
   var housingType = document.querySelector('#housing-type');
   var housingPrice = document.querySelector('#housing-price');
@@ -110,8 +112,6 @@
     return differenceElem.length;
   }
 
-  var pinsData = [];
-
   function filterData(object, element) {
     if (object.offer.type === housingType.value || housingType.value === 'any' &&
         object.offer.rooms === housingRooms.value || housingRooms.value === 'any' &&
@@ -122,10 +122,16 @@
       element.style.display = 'none';
     }
   }
-  filterForm.addEventListener('change', function () {
-    for (var i = 0; i < pinsData.length; i++) {
-      filterData(pinsData[i], window.mapPins[i]);
+console.log(popup);
+  filterForm.addEventListener('change', function (evt) {
+    var target = evt.target;
+    for (var i = 0; i < filterForm.children.length; i++) {
+      if (target === filterForm.children[i] || target.tagName === 'INPUT') {
+        for (var j = 0; j < window.data.length; j++) {
+          filterData(window.data[j], mapPin[j]);
+        }
+      }
     }
   });
-*/
+  window.load(successHandler, window.errorHandler);
 })();
