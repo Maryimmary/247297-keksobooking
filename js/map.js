@@ -8,12 +8,10 @@
   var arrayItem = [];
 
   function successHandler(newData) {
-    for (var j = 0; j < newData.length; j++) {
-      arrayItem.push(newData[j]);
-    }
-    for (var i = 0; i < Math.min(newData.length, MAX_ITEM_COUNT); i++) {
+    for (var i = 0; i < newData.length; i++) {
       map.insertBefore(window.addCard(newData[i]), map.children[map.children.length - 1]);
       mapPinsContainer.appendChild(window.addPin(newData[i]));
+      arrayItem.push(newData[i]);
     }
   }
 
@@ -26,14 +24,14 @@
   // Клик на главную кнопку
   function onButtonClick() {
     map.classList.remove('map--faded');
+    for (var i = 0; i < Math.min(popup.length, MAX_ITEM_COUNT); i++) {
+      mapPin[i].style.display = 'block';// Если добавить ограничение в функцию загрузки, отсюда убрать дисплей блок
+    }
     noticeForm.classList.remove('notice__form--disabled');
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = false;
       return it;
     });
-    for (var i = 0; i < popup.length; i++) {
-      mapPin[i].style.display = 'block';
-    }
   }
 
   // Нажатие на ESC при открытом объявлении
@@ -115,11 +113,9 @@
     return differenceElem.length;
   }
 
-  function filterData(object, element) {
-    if (object.offer.type === housingType.value || housingType.value === 'any' &&
-        object.offer.rooms === housingRooms.value || housingRooms.value === 'any' &&
-        object.offer.guests === housingGuests.value || housingGuests.value === 'any' &&
-        setHousingPriceValue(object) === true && getDifferenceElement(object.offer.features) === 0) {
+  function filterData(object, element) { // value не соответствует - в строках лишняя информация
+    if ((object.offer.type === housingType.value || housingType.value === 'any') && (object.offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
+      (object.offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') && (setHousingPriceValue(object) === true) && (getDifferenceElement(object.offer.features) === 0)) {
       element.style.display = 'block';
     } else {
       element.style.display = 'none';
