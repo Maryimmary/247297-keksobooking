@@ -14,7 +14,7 @@
       arrayItem.push(newData[i]);
     }
   }
-
+  window.load(successHandler, window.errorHandler);
   var mapPin = mapPinsContainer.getElementsByTagName('button');
   var popup = map.getElementsByTagName('article');
 
@@ -100,22 +100,31 @@
     } return false;
   }
 
-  var checkedFeatures = Array.from(housingFeaturesCheckbox).filter(function (item) { // Создание массива из input checkbox
-    return item.checked;
-  }).map(function (item) {
-    return item.value;
+  function getCheckedValue() {
+    Array.from(housingFeaturesCheckbox).filter(function (item) {
+      return item.checked === true;
+    }).map(function (item) {
+      return item.value;
+    });
+  }
+
+  housingFeaturesCheckbox.forEach(function (item) {
+    item.addEventListener('change', getCheckedValue);
   });
 
-  function getDifferenceElement(array) { // Сравнение массива input checkbox и массива объектов с сервера
-    var differenceElem = checkedFeatures.filter(function (item) {
-      return !array.includes(item);
+  function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива input checkbox и массива объектов с сервера
+    var differenceElem = arrayChecked.filter(function (item) {
+      return !arrayData.includes(item);
     });
     return differenceElem.length;
   }
 
-  function filterData(object, element) { // value не соответствует - в строках лишняя информация
-    if ((object.offer.type === housingType.value || housingType.value === 'any') && (object.offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
-      (object.offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') && (setHousingPriceValue(object) === true) && (getDifferenceElement(object.offer.features) === 0)) {
+  function filterData(object, element) {
+    if ((object.offer.type === housingType.value || housingType.value === 'any') &&
+      (object.offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
+      (object.offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') &&
+      (setHousingPriceValue(object) === true) &&
+      (getDifferenceElement(object.offer.features) === 0)) {
       element.style.display = 'block';
     } else {
       element.style.display = 'none';
@@ -132,5 +141,4 @@
       }
     }
   });
-  window.load(successHandler, window.errorHandler);
 })();
