@@ -9,12 +9,17 @@
 
   function successHandler(newData) {
     for (var i = 0; i < newData.length; i++) {
-      map.insertBefore(window.addCard(newData[i]), map.children[map.children.length - 1]);
-      mapPinsContainer.appendChild(window.addPin(newData[i]));
       arrayItem.push(newData[i]);
     }
   }
-  window.load(successHandler, window.errorHandler);
+
+  function renderData() {
+    for (var i = 0; i < Math.min(arrayItem.length, MAX_ITEM_COUNT); i++) {
+      map.insertBefore(window.addCard(arrayItem[i]), map.children[map.children.length - 1]);
+      mapPinsContainer.appendChild(window.addPin(arrayItem[i]));
+    }
+  }
+
   var mapPin = mapPinsContainer.getElementsByTagName('button');
   var popup = map.getElementsByTagName('article');
 
@@ -23,10 +28,8 @@
 
   // Клик на главную кнопку
   function onButtonClick() {
+    renderData();
     map.classList.remove('map--faded');
-    for (var i = 0; i < Math.min(popup.length, MAX_ITEM_COUNT); i++) {
-      mapPin[i].style.display = 'block';// Если добавить ограничение в функцию загрузки, отсюда убрать дисплей блок
-    }
     noticeForm.classList.remove('notice__form--disabled');
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = false;
@@ -39,39 +42,39 @@
     if (event.keyCode === ESC_KEYCODE) {
       for (var i = 0; i < popup.length; i++) {
         if (mapPin[i].classList.contains('map__pin--active')) {
-          mapPin[i].classList.remove('map__pin--active');
-          popup[i].style.display = 'none';
+          closeCard(i);
         }
       }
     }
   }
 
+  function closeCard(index) {
+    mapPin[index].classList.remove('map__pin--active');
+    popup[index].style.display = 'none';
+    document.removeEventListener('keydown', onPopupEscPress);
+  }
+
+  function showCard(index) {
+    mapPin[index].classList.add('map__pin--active');
+    popup[index].style.display = 'block';
+    document.addEventListener('keydown', onPopupEscPress);
+  }
+
   // Показ/скрытие карточки объявления
-  function showCard(event) {
+  function cardToggler(event) {
     var target = event.target;
-    if (target.className === 'map__pin') {
-      target.classList.add('map__pin--active');
-    } else if (target.parentNode.className === 'map__pin') {
-      target.parentNode.classList.add('map__pin--active');
-    }
-    for (var i = 0; i < popup.length; i++) {
-      if (mapPin[i].classList.contains('map__pin--active')) {
-        popup[i].style.display = 'block';
+    for (var i = 0; i < mapPin.length; i++) {
+      if (target === mapPin[i] || target === mapPin[i].firstChild && mapPin[i].className === 'map__pin') {
+        showCard(i);
       } else if (target === popup[i].children[1]) {
-        popup[i].style.display = 'none';
-        mapPin[i].classList.remove('map__pin--active');
-      }
-    }
-    for (var j = 0; j < popup.length; j++) {
-      if (mapPin[j].classList.contains('map__pin--active') && mapPin[j] !== target && mapPin[j].firstChild !== target) {
-        mapPin[j].classList.remove('map__pin--active');
-        popup[j].style.display = 'none';
+        closeCard(i);
+      } else if (mapPin[i].className !== ('map__pin') && mapPin[i] !== target && mapPin[i].firstChild !== target) {
+        closeCard(i);
       }
     }
   }
 
-  map.addEventListener('click', showCard);
-  document.addEventListener('keydown', onPopupEscPress);
+  map.addEventListener('click', cardToggler);
   window.mainPin.addEventListener('mouseup', onButtonClick);
 
   // Управление фильтрами
@@ -99,13 +102,14 @@
     } return false;
   }
 
-  var checkedFeaturesArray;
+  var checkedFeaturesArray = [];
 
   function getCheckedValue() {
-    checkedFeaturesArray = Array.from(housingFeaturesCheckbox).filter(function (item) {
-      return item.checked === true;
+    Array.from(housingFeaturesCheckbox).filter(function (item) {
+      return item.checked;
     }).map(function (item) {
-      return item.value;
+      checkedFeaturesArray.push(item.value);
+      return checkedFeaturesArray;
     });
   }
 
@@ -116,7 +120,7 @@
     return differenceElem.length;
   }
 
-  housingFeatures.addEventListener('change', getCheckedValue, getDifferenceElement);
+  housingFeatures.addEventListener('change', getCheckedValue);
 
   function filterData(object, element) {
     if ((object.offer.type === housingType.value || housingType.value === 'any') &&
@@ -140,4 +144,5 @@
       }
     }
   });
+  window.load(successHandler, window.errorHandler);
 })();
