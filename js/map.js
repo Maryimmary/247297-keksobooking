@@ -77,7 +77,6 @@
   // Управление фильтрами
 
   var filterForm = document.querySelector('.map__filters');
-  // var selectFeatures = filterForm.querySelectorAll('.map__filter'); Все селекты
 
   var housingFeatures = document.querySelector('#housing-features'); // Список удобств
   var housingFeaturesCheckbox = housingFeatures.querySelectorAll('input'); // Чекбоксы удобств
@@ -110,14 +109,14 @@
     });
   }
 
-  housingFeatures.addEventListener('change', getCheckedValue);
-
   function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива input checkbox и массива объектов с сервера
     var differenceElem = arrayChecked.filter(function (item) {
       return !arrayData.includes(item);
     });
     return differenceElem.length;
   }
+
+  housingFeatures.addEventListener('change', getCheckedValue, getDifferenceElement);
 
   function filterData(object, element) {
     if ((object.offer.type === housingType.value || housingType.value === 'any') &&
