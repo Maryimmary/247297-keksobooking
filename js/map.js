@@ -100,17 +100,17 @@
     } return false;
   }
 
+  var checkedFeaturesArray;
+
   function getCheckedValue() {
-    Array.from(housingFeaturesCheckbox).filter(function (item) {
+    checkedFeaturesArray = Array.from(housingFeaturesCheckbox).filter(function (item) {
       return item.checked === true;
     }).map(function (item) {
       return item.value;
     });
   }
 
-  housingFeaturesCheckbox.forEach(function (item) {
-    item.addEventListener('change', getCheckedValue);
-  });
+  housingFeatures.addEventListener('change', getCheckedValue);
 
   function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива input checkbox и массива объектов с сервера
     var differenceElem = arrayChecked.filter(function (item) {
@@ -124,7 +124,7 @@
       (object.offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
       (object.offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') &&
       (setHousingPriceValue(object) === true) &&
-      (getDifferenceElement(object.offer.features) === 0)) {
+      (getDifferenceElement(object.offer.features, checkedFeaturesArray) === 0)) {
       element.style.display = 'block';
     } else {
       element.style.display = 'none';
