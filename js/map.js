@@ -5,18 +5,19 @@
   var map = document.querySelector('.map');
   var mapPinsContainer = document.querySelector('.map__container');
   window.mainPin = document.querySelector('.map__pin--main');
-  var arrayItem = [];
+  var dataObjects = [];
+  console.log(dataObjects);
 
   function successHandler(newData) {
     for (var i = 0; i < newData.length; i++) {
-      arrayItem.push(newData[i]);
+      dataObjects.push(newData[i]);
     }
   }
 
   function renderData() {
-    for (var i = 0; i < Math.min(arrayItem.length, MAX_ITEM_COUNT); i++) {
-      map.insertBefore(window.addCard(arrayItem[i]), map.children[map.children.length - 1]);
-      mapPinsContainer.appendChild(window.addPin(arrayItem[i]));
+    for (var i = 0; i < Math.min(dataObjects.length, MAX_ITEM_COUNT); i++) {
+      map.insertBefore(window.addCard(dataObjects[i]), map.lastElementChild); // or map.children[map.children.length - 1]
+      mapPinsContainer.appendChild(window.addPin(dataObjects[i]));
     }
   }
 
@@ -38,10 +39,10 @@
   }
 
   // Нажатие на ESC при открытом объявлении
-  function onPopupEscPress(event) {
-    if (event.keyCode === ESC_KEYCODE) {
+  function onPopupEscPress(evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
       for (var i = 0; i < popup.length; i++) {
-        if (mapPin[i].classList.contains('map__pin--active')) {
+        if (mapPin[i].className === 'map__pin map__pin--active') {
           closeCard(i);
         }
       }
@@ -61,7 +62,7 @@
   }
 
   // Показ/скрытие карточки объявления
-  function cardToggler(event) {
+  function toggleCard(event) {
     var target = event.target;
     for (var i = 0; i < mapPin.length; i++) {
       if (target === mapPin[i] || target === mapPin[i].firstChild && mapPin[i].className === 'map__pin') {
@@ -74,11 +75,10 @@
     }
   }
 
-  map.addEventListener('click', cardToggler);
+  map.addEventListener('click', toggleCard);
   window.mainPin.addEventListener('mouseup', onButtonClick);
 
   // Управление фильтрами
-
   var filterForm = document.querySelector('.map__filters');
 
   var housingFeatures = document.querySelector('#housing-features'); // Список удобств
@@ -105,12 +105,12 @@
   var checkedFeaturesArray = [];
 
   function getCheckedValue() {
-    Array.from(housingFeaturesCheckbox).filter(function (item) {
+    checkedFeaturesArray = Array.from(housingFeaturesCheckbox).filter(function (item) {
       return item.checked;
     }).map(function (item) {
-      checkedFeaturesArray.push(item.value);
-      return checkedFeaturesArray;
+      return item.value;
     });
+    console.log(checkedFeaturesArray);
   }
 
   function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива input checkbox и массива объектов с сервера
@@ -122,24 +122,60 @@
 
   housingFeatures.addEventListener('change', getCheckedValue);
 
+  /*
+  function renderData() {
+    for (var i = 0; i < Math.min(dataObjects.length, MAX_ITEM_COUNT); i++) {
+      map.insertBefore(window.addCard(dataObjects[i]), map.children[map.children.length - 1]);
+      mapPinsContainer.appendChild(window.addPin(dataObjects[i]));
+    }
+  }
+  */
+  /*
+    var updateWizards = function () {
+
+      var sameCoatAndEyesWizards = wizards.filter(function (it) {
+        return it.colorCoat === coatColor &&
+          it.colorEyes === eyesColor;
+      })
+
+      var sameCoatWizards = wizards.filter(function (it) {
+        return it.colorCoat === coatColor;
+      });
+
+      var sameEyesWizards = wizards.filter(function (it) {
+        return it.colorEyes === eyesColor;
+      });
+  
+      var filteredWizards = sameCoatAndEyesWizards;
+      filteredWizards = filteredWizards.concat(sameCoatWizards);
+      filteredWizards = filteredWizards.concat(sameEyesWizards);
+      filteredWizards = filteredWizards.concat(wizards);
+
+      var uniqueWizards = filteredWizards.filter(function (it, i) {
+        return filteredWizards.indexOf(it) === i;
+      });
+
+      window.render(uniqueWizards);
+    }
+  */
   function filterData(object, element) {
     if ((object.offer.type === housingType.value || housingType.value === 'any') &&
       (object.offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
       (object.offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') &&
       (setHousingPriceValue(object) === true) &&
       (getDifferenceElement(object.offer.features, checkedFeaturesArray) === 0)) {
-      element.style.display = 'block';
+      element.parentNode.insertBefore(element, element.parentNode.children[dataObjects.indexOf(object) - 1]);
     } else {
-      element.style.display = 'none';
+      element.remove();
     }
   }
 
   filterForm.addEventListener('change', function (evt) {
     var target = evt.target;
     for (var i = 0; i < filterForm.children.length; i++) {
-      if (target === filterForm.children[i] || target.tagName === 'INPUT') {
-        for (var j = 0; j < arrayItem.length; j++) {
-          filterData(arrayItem[j], mapPin[j]);
+      if (target.tagName === 'SELECT' || target.tagName === 'INPUT') {
+        for (var j = 0; j < dataObjects.length; j++) {
+          filterData(dataObjects[j], mapPin[j]);
         }
       }
     }
