@@ -5,7 +5,7 @@
   var map = document.querySelector('.map');
   var mapPinsContainer = document.querySelector('.map__container');
   window.mainPin = document.querySelector('.map__pin--main');
-  var dataObjects = [];
+  var dataObjects = []; // для получения других значение сортировать этот массив
   console.log(dataObjects);
 
   function successHandler(newData) {
@@ -14,10 +14,10 @@
     }
   }
 
-  function renderData() {
-    for (var i = 0; i < Math.min(dataObjects.length, MAX_ITEM_COUNT); i++) {
-      map.insertBefore(window.addCard(dataObjects[i]), map.lastElementChild); // or map.children[map.children.length - 1]
-      mapPinsContainer.appendChild(window.addPin(dataObjects[i]));
+  function renderData(data) {
+    for (var i = 0; i < Math.min(data.length, MAX_ITEM_COUNT); i++) {
+      map.insertBefore(window.addCard(data[i]), map.lastElementChild); // or map.children[map.children.length - 1]
+      mapPinsContainer.appendChild(window.addPin(data[i]));
     }
   }
 
@@ -29,7 +29,7 @@
 
   // Клик на главную кнопку
   function onButtonClick() {
-    renderData();
+    renderData(dataObjects);
     map.classList.remove('map--faded');
     noticeForm.classList.remove('notice__form--disabled');
     Array.from(noticeFormElement).forEach(function (it) {
@@ -120,6 +120,8 @@
     console.log(checkedFeaturesArray);
   }
 
+  housingFeatures.addEventListener('change', getCheckedValue);
+
   function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива input checkbox и массива объектов с сервера
     var differenceElem = arrayChecked.filter(function (item) {
       return !arrayData.includes(item);
@@ -127,60 +129,33 @@
     return differenceElem.length;
   }
 
-  housingFeatures.addEventListener('change', getCheckedValue);
-
-  /*
-  function renderData() {
-    for (var i = 0; i < Math.min(dataObjects.length, MAX_ITEM_COUNT); i++) {
-      map.insertBefore(window.addCard(dataObjects[i]), map.children[map.children.length - 1]);
-      mapPinsContainer.appendChild(window.addPin(dataObjects[i]));
-    }
-  }
-  */
-  /*
-    var updateWizards = function () {
-
-      var sameCoatAndEyesWizards = wizards.filter(function (it) {
-        return it.colorCoat === coatColor &&
-          it.colorEyes === eyesColor;
-      })
-
-      var sameCoatWizards = wizards.filter(function (it) {
-        return it.colorCoat === coatColor;
-      });
-
-      var sameEyesWizards = wizards.filter(function (it) {
-        return it.colorEyes === eyesColor;
-      });
-
-      var filteredWizards = sameCoatAndEyesWizards;
-      filteredWizards = filteredWizards.concat(sameCoatWizards);
-      filteredWizards = filteredWizards.concat(sameEyesWizards);
-      filteredWizards = filteredWizards.concat(wizards);
-
-      var uniqueWizards = filteredWizards.filter(function (it, i) {
-        return filteredWizards.indexOf(it) === i;
-      });
-
-      window.render(uniqueWizards);
-    }
-  */
-  function filterData(object, element) {
-    if ((object.offer.type === housingType.value || housingType.value === 'any') &&
-      (object.offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
-      (object.offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') &&
-      (setHousingPriceValue(object) === true) &&
-      (getDifferenceElement(object.offer.features, checkedFeaturesArray) === 0)) {
-      renderData();
-    } else {
-      element.remove();
-    }
+  function filterData() {
+    var filteredData = dataObjects.filter(function (object) { // массив подходящих элементов
+      return (object.offer.type === housingType.value || housingType.value === 'any') &&
+        (object.offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
+        (object.offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') &&
+        (setHousingPriceValue(object) === true) &&
+        (getDifferenceElement(object.offer.features, checkedFeaturesArray) === 0);
+    });
+    var indexesRelevant = filteredData.map(function (item) { // индексы подходящих элементов
+      return dataObjects.indexOf(item);
+    });
+    var indexesIrrelevant = dataObjects.filter(function (item) { // индексы лишних элементов
+      return !filteredData.includes(item);
+    }).map(function (item) {
+      return dataObjects.indexOf(item);
+    });
+    dataObjects.forEach(function (item, index) {
+      if (indexesRelevant.includes(index)) {
+        renderData(dataObjects.filter(function (object, i) {
+          return indexesRelevant.includes(i);
+        }));
+      } else if (mapPin[dataObjects.indexOf(item)] && indexesIrrelevant.includes(index)) {
+        mapPin[dataObjects.indexOf(item)].remove();
+      }
+    });
   }
 
-  filterForm.addEventListener('change', function () {
-    for (var j = 0; j < Math.min(dataObjects.length, MAX_ITEM_COUNT); j++) {
-      filterData(dataObjects[j], mapPin[j]);
-    }
-  });
+  filterForm.addEventListener('change', filterData);
   window.load(successHandler, window.errorHandler);
 })();
