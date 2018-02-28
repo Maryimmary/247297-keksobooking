@@ -76,7 +76,14 @@
   }
 
   map.addEventListener('click', toggleCard);
-  window.mainPin.addEventListener('mouseup', onButtonClick);
+
+  window.mainPin.addEventListener('mouseup', function () {
+    if (dataObjects.length !== 0) {
+      onButtonClick();
+    } else {
+      setTimeout(onButtonClick, 1000);
+    }
+  });
 
   // Управление фильтрами
   var filterForm = document.querySelector('.map__filters');
@@ -145,7 +152,7 @@
       var sameEyesWizards = wizards.filter(function (it) {
         return it.colorEyes === eyesColor;
       });
-  
+
       var filteredWizards = sameCoatAndEyesWizards;
       filteredWizards = filteredWizards.concat(sameCoatWizards);
       filteredWizards = filteredWizards.concat(sameEyesWizards);
@@ -164,20 +171,15 @@
       (object.offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') &&
       (setHousingPriceValue(object) === true) &&
       (getDifferenceElement(object.offer.features, checkedFeaturesArray) === 0)) {
-      element.parentNode.insertBefore(element, element.parentNode.children[dataObjects.indexOf(object) - 1]);
+      renderData();
     } else {
       element.remove();
     }
   }
 
-  filterForm.addEventListener('change', function (evt) {
-    var target = evt.target;
-    for (var i = 0; i < filterForm.children.length; i++) {
-      if (target.tagName === 'SELECT' || target.tagName === 'INPUT') {
-        for (var j = 0; j < dataObjects.length; j++) {
-          filterData(dataObjects[j], mapPin[j]);
-        }
-      }
+  filterForm.addEventListener('change', function () {
+    for (var j = 0; j < Math.min(dataObjects.length, MAX_ITEM_COUNT); j++) {
+      filterData(dataObjects[j], mapPin[j]);
     }
   });
   window.load(successHandler, window.errorHandler);
