@@ -5,6 +5,7 @@
   var map = document.querySelector('.map');
   var mapPinsContainer = document.querySelector('.map__container');
   window.mainPin = document.querySelector('.map__pin--main');
+  var filterForm = document.querySelector('.map__filters');
   var objects = [];
   console.log(objects);
 
@@ -33,6 +34,7 @@
       }
     }
     noticeForm.classList.remove('notice__form--disabled');
+    filterForm.reset();
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = false;
       return it;
@@ -87,8 +89,6 @@
   });
 
   // Управление фильтрами
-  var filterForm = document.querySelector('.map__filters');
-
   var housingFeatures = document.querySelector('#housing-features'); // Список удобств
   var housingFeaturesCheckbox = housingFeatures.querySelectorAll('input'); // Чекбоксы удобств
 
@@ -145,8 +145,6 @@
         (getDifferenceElement(objects[i].offer.features, checkedFeaturesArray) === 0)) {
         if (checkCountPin() < MAX_ITEM_COUNT) {
           mapPin[i].style.display = 'block';
-        } else {
-          mapPin[i].style.display = 'none';
         }
       } else {
         mapPin[i].style.display = 'none';
