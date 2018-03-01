@@ -98,11 +98,6 @@
     }, 2000);
   };
 
-/*
-  var formSubmitContainer = noticeForm.querySelector('.form__element--submit');
-  formSubmitContainer.addEventListener('click', window.returnInactive);
-*/
-
   noticeForm.addEventListener('submit', function (evt) {
     window.send(new FormData(noticeForm), successMessage, window.returnInactive, window.errorHandler);
     evt.preventDefault();

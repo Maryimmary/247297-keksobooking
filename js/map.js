@@ -19,6 +19,8 @@
     }
   }
 
+  window.load(successHandler, window.errorHandler);
+
   // Клик на главную кнопку
   function onButtonClick() {
     if (map.classList.contains('map--faded')) {
@@ -166,5 +168,4 @@
   }
 
   filterForm.addEventListener('change', filterData);
-  window.load(successHandler, window.errorHandler);
 })();
