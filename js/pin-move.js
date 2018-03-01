@@ -43,8 +43,7 @@
       var currentX = Math.max(Position.MIN_X, Math.min(Position.MAX_X, leftPosition));
       address.value = 'x: ' + (currentX + Shift.LEFT) + ', y: ' + (currentY + Shift.TOP);
 
-      window.mainPin.style.left = currentX + 'px';
-      window.mainPin.style.top = currentY + 'px';
+      window.mainPin.style = 'left: ' + currentX + 'px; top: ' + currentY + 'px; z-index: 3';
     }
 
     function onMouseUp(upEvt) {

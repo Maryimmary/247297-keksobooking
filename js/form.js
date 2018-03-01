@@ -46,10 +46,10 @@
   }
 
   function enabledOptions(selectElement, optionsArray, dataObject) {
-    for (var t = 0; t < optionsArray.length; t++) {
-      optionsArray[t].disabled = !dataObject[selectElement].includes(optionsArray[t].value);
+    for (var i = 0; i < optionsArray.length; i++) {
+      optionsArray[i].disabled = !dataObject[selectElement].includes(optionsArray[i].value);
     }
-    return optionsArray[t];
+    return optionsArray[i];
   }
 
   function synchronizeRoomGuests() {
@@ -98,6 +98,9 @@
       noticeForm.reset();
     }, 2000);
   };
+
+  var formSubmitContainer = noticeForm.querySelector('.form__element--submit');
+  formSubmitContainer.addEventListener('click', window.returnInactive);
 
   noticeForm.addEventListener('submit', function (evt) {
     window.send(new FormData(noticeForm), successMessage, window.errorHandler);

@@ -5,7 +5,10 @@
   var map = document.querySelector('.map');
   var mapPinsContainer = document.querySelector('.map__container');
   window.mainPin = document.querySelector('.map__pin--main');
-  var filterForm = document.querySelector('.map__filters');
+  var mapPin = mapPinsContainer.getElementsByTagName('button');
+  var popup = map.getElementsByTagName('article');
+  var noticeForm = document.querySelector('.notice__form');
+  var noticeFormElement = document.querySelectorAll('.notice__form fieldset');
   var objects = [];
 
   function successHandler(data) {
@@ -16,31 +19,41 @@
     }
   }
 
-  var mapPin = mapPinsContainer.getElementsByTagName('button');
-  var popup = map.getElementsByTagName('article');
-
-  var noticeForm = document.querySelector('.notice__form');
-  var noticeFormElement = document.querySelectorAll('.notice__form fieldset');
-
   // Клик на главную кнопку
   function onButtonClick() {
-    map.classList.remove('map--faded');
-    for (var i = 0; i < Math.min(mapPin.length, MAX_ITEM_COUNT); i++) {
-      if (checkCountPin() < MAX_ITEM_COUNT) {
-        mapPin[i].style.display = 'block';
-      } else {
-        return;
+    if (map.classList.contains('map--faded')) {
+      map.classList.remove('map--faded');
+      for (var i = 0; i < Math.min(mapPin.length, MAX_ITEM_COUNT); i++) {
+        if (checkCountPin() < MAX_ITEM_COUNT) {
+          mapPin[i].style.display = 'block';
+        } else {
+          return;
+        }
       }
     }
     noticeForm.classList.remove('notice__form--disabled');
-    // filterForm.reset();
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = false;
-      return it;
     });
   }
 
-  // Нажатие на ESC при открытом объявлении
+  // Приведение элементов в исходное состояние при сбросе формы
+  window.returnInactive = function () {
+    map.classList.add('map--faded');
+    window.mainPin.style = 'left: 600px; top: 375px';
+    for (var i = 0; i < mapPin.length; i++) {
+      mapPin[i].style.display = 'none';
+    }
+    noticeForm.reset();
+    filterForm.reset();
+    noticeForm.classList.add('notice__form--disabled');
+    Array.from(noticeFormElement).forEach(function (it) {
+      it.disabled = true;
+    });
+  };
+
+
+  // Функции, определющию поведение карточек
   function onPopupEscPress(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       for (var i = 0; i < popup.length; i++) {
@@ -80,7 +93,7 @@
   map.addEventListener('click', toggleCard);
 
   window.mainPin.addEventListener('mouseup', function () {
-    if (mapPin.length !== 0) {
+    if (objects.length !== 0) {
       onButtonClick();
     } else {
       setTimeout(onButtonClick, 1000);
@@ -88,6 +101,7 @@
   });
 
   // Управление фильтрами
+  var filterForm = document.querySelector('.map__filters');
   var housingFeatures = document.querySelector('#housing-features'); // Список удобств
   var housingFeaturesCheckbox = housingFeatures.querySelectorAll('input'); // Чекбоксы удобств
 
