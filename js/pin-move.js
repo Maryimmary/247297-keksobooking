@@ -8,8 +8,8 @@
   var Position = {
     MIN_Y: 150,
     MAX_Y: 500,
-    MIN_X: 55,
-    MAX_X: 1145
+    MIN_X: 50,
+    MAX_X: 1150
   };
 
   var address = document.querySelector('#address');

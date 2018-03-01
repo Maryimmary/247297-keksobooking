@@ -7,7 +7,6 @@
   window.mainPin = document.querySelector('.map__pin--main');
   var filterForm = document.querySelector('.map__filters');
   var objects = [];
-  console.log(objects);
 
   function successHandler(data) {
     for (var i = 0; i < data.length; i++) {
@@ -34,7 +33,7 @@
       }
     }
     noticeForm.classList.remove('notice__form--disabled');
-    filterForm.reset();
+    // filterForm.reset();
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = false;
       return it;
@@ -112,7 +111,7 @@
 
   var checkedFeaturesArray = [];
 
-  function getCheckedValue() {
+  function getCheckedValue() { // Получить массив значений выбранных чекбоксов
     checkedFeaturesArray = Array.from(housingFeaturesCheckbox).filter(function (item) {
       return item.checked;
     }).map(function (item) {
@@ -122,7 +121,7 @@
 
   housingFeatures.addEventListener('change', getCheckedValue);
 
-  function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива input checkbox и массива объектов с сервера
+  function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива выбранных чекбоксов и массива объектов с сервера
     var differenceElem = arrayChecked.filter(function (item) {
       return !arrayData.includes(item);
     });
