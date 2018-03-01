@@ -29,7 +29,7 @@
   };
 
   /* Функция отправки пользовательских данных */
-  window.send = function (data, onLoad, onError) {
+  window.send = function (data, onLoad, reset, onError) {
     var URL = 'https://js.dump.academy/keksobooking';
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -38,6 +38,7 @@
       switch (xhr.status) {
         case 200:
           onLoad(xhr.response);
+          reset();
           break;
 
         default:

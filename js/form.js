@@ -95,15 +95,17 @@
     document.body.insertAdjacentElement('afterbegin', node);
     setTimeout(function () {
       document.body.removeChild(node);
-      noticeForm.reset();
     }, 2000);
   };
 
+/*
   var formSubmitContainer = noticeForm.querySelector('.form__element--submit');
   formSubmitContainer.addEventListener('click', window.returnInactive);
+*/
 
   noticeForm.addEventListener('submit', function (evt) {
-    window.send(new FormData(noticeForm), successMessage, window.errorHandler);
+    window.send(new FormData(noticeForm), successMessage, window.returnInactive, window.errorHandler);
     evt.preventDefault();
   });
+  noticeForm.addEventListener('reset', window.returnInactive);
 })();
