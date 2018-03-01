@@ -7,6 +7,21 @@
     }
   }
 
+  function translateToRus(object) {
+    object = object.offer.type;
+    var rusNames = {
+      bungalo: 'Сарай',
+      flat: 'Квартира',
+      house: 'Дом'
+    };
+    for (var key in rusNames) {
+      if (object === key) {
+        object = rusNames[key];
+      }
+    }
+    return object;
+  }
+
   function createImgElement(array, parent) {
     for (var i = 0; i < array.length; i++) {
       var li = document.createElement('li');
@@ -26,7 +41,7 @@
     templateCardElement.querySelector('h3').textContent = data.offer.title;
     templateCardElement.querySelector('small').textContent = data.offer.address;
     templateCardElement.querySelector('.popup__price').innerHTML = data.offer.price + '&#x20BD;/ночь';
-    templateCardElement.querySelector('h4').textContent = data.offer.type;
+    templateCardElement.querySelector('h4').textContent = translateToRus(data);
     paragraphs[2].textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей ';
     paragraphs[3].textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     paragraphs[4].textContent = data.offer.description;
