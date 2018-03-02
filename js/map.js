@@ -151,15 +151,6 @@
     return excess.length;
   }
 
-  var DEBOUNCE_INTERVAL = 500;
-  var lastTimeout;
-  window.debounce = function () {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-    lastTimeout = window.setTimeout(filterData, DEBOUNCE_INTERVAL);
-  };
-
   function filterData() {
     for (var i = 0; i < mapPin.length; i++) {
       if ((objects[i].offer.type === housingType.value || housingType.value === 'any') &&
@@ -176,5 +167,15 @@
     }
   }
 
-  filterForm.addEventListener('change', window.debounce);
+  var DEBOUNCE_INTERVAL = 500;
+  var lastTimeout;
+
+  function debounce() {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(filterData, DEBOUNCE_INTERVAL);
+  }
+
+  filterForm.addEventListener('change', debounce);
 })();
