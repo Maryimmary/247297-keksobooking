@@ -2,6 +2,8 @@
 (function () {
   var ESC_KEYCODE = 27;
   var MAX_ITEM_COUNT = 5;
+  var objects = [];
+
   var map = document.querySelector('.map');
   var mapPinsContainer = document.querySelector('.map__container');
   window.mainPin = document.querySelector('.map__pin--main');
@@ -9,7 +11,6 @@
   var popup = map.getElementsByTagName('article');
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormElement = document.querySelectorAll('.notice__form fieldset');
-  var objects = [];
 
   function successHandler(data) {
     for (var i = 0; i < data.length; i++) {
@@ -53,7 +54,6 @@
       it.disabled = true;
     });
   };
-
 
   // Функции, определющию поведение карточек
   function onPopupEscPress(evt) {
@@ -102,10 +102,10 @@
     }
   });
 
-  // Управление фильтрами
+  // Управление фильтрами отелей, загруженных с сервера
   var filterForm = document.querySelector('.map__filters');
-  var housingFeatures = document.querySelector('#housing-features'); // Список удобств
-  var housingFeaturesCheckbox = housingFeatures.querySelectorAll('input'); // Чекбоксы удобств
+  var housingFeatures = document.querySelector('#housing-features');
+  var housingFeaturesCheckbox = housingFeatures.querySelectorAll('input');
 
   var housingType = document.querySelector('#housing-type');
   var housingPrice = document.querySelector('#housing-price');
@@ -137,21 +137,21 @@
 
   housingFeatures.addEventListener('change', getCheckedValue);
 
-  function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива выбранных чекбоксов и массива объектов с сервера
+  function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива выбранных чекбоксов и массива значений объектов с сервера
     var differenceElements = arrayChecked.filter(function (item) {
       return !arrayData.includes(item);
     });
     return differenceElements.length;
   }
 
-  function checkCountPin() {
+  function checkCountPin() { // Проверка количества отображаемых на странице отелей
     var excess = Array.from(mapPin).filter(function (item) {
       return item.style.display === 'block';
     });
     return excess.length;
   }
 
-  function filterData() {
+  function filterData() { // Подбор удоблетворяющих требованиям отелей
     for (var i = 0; i < mapPin.length; i++) {
       if ((objects[i].offer.type === housingType.value || housingType.value === 'any') &&
         (objects[i].offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
@@ -166,7 +166,6 @@
       }
     }
   }
-
 
   filterForm.addEventListener('change', window.debounce(filterData));
 })();
