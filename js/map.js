@@ -125,10 +125,10 @@
     } return false;
   }
 
-  var checkedFeaturesArray = [];
+  var checkedFeatures = [];
 
   function getCheckedValue() { // Получить массив значений выбранных чекбоксов
-    checkedFeaturesArray = Array.from(housingFeaturesCheckbox).filter(function (item) {
+    checkedFeatures = Array.from(housingFeaturesCheckbox).filter(function (item) {
       return item.checked;
     }).map(function (item) {
       return item.value;
@@ -138,10 +138,10 @@
   housingFeatures.addEventListener('change', getCheckedValue);
 
   function getDifferenceElement(arrayData, arrayChecked) { // Сравнение массива выбранных чекбоксов и массива объектов с сервера
-    var differenceElem = arrayChecked.filter(function (item) {
+    var differenceElements = arrayChecked.filter(function (item) {
       return !arrayData.includes(item);
     });
-    return differenceElem.length;
+    return differenceElements.length;
   }
 
   function checkCountPin() {
@@ -157,7 +157,7 @@
         (objects[i].offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
         (objects[i].offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') &&
         (setHousingPriceValue(objects[i]) === true) &&
-        (getDifferenceElement(objects[i].offer.features, checkedFeaturesArray) === 0)) {
+        (getDifferenceElement(objects[i].offer.features, checkedFeatures) === 0)) {
         if (checkCountPin() < MAX_ITEM_COUNT) {
           mapPin[i].style.display = 'block';
         }
@@ -167,15 +167,6 @@
     }
   }
 
-  var DEBOUNCE_INTERVAL = 500;
-  var lastTimeout;
 
-  function debounce() {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-    lastTimeout = window.setTimeout(filterData, DEBOUNCE_INTERVAL);
-  }
-
-  filterForm.addEventListener('change', debounce);
+  filterForm.addEventListener('change', window.debounce(filterData));
 })();

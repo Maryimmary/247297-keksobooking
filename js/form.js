@@ -73,12 +73,12 @@
     }
   }
 
-  function syncValues(element, value) {
+  function synchronizeValues(element, value) {
     element.value = value;
   }
 
-  window.synchronizeFields(checkIn, checkOut, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
-  window.synchronizeFields(checkOut, checkIn, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
+  window.synchronizeFields(checkIn, checkOut, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], synchronizeValues);
+  window.synchronizeFields(checkOut, checkIn, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], synchronizeValues);
 
   type.addEventListener('change', synchronizeTypePrice);
   roomNumber.addEventListener('input', synchronizeRoomGuests);
