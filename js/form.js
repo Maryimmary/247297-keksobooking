@@ -46,10 +46,10 @@
   }
 
   function enabledOptions(selectElement, optionsArray, dataObject) {
-    for (var t = 0; t < optionsArray.length; t++) {
-      optionsArray[t].disabled = !dataObject[selectElement].includes(optionsArray[t].value);
+    for (var i = 0; i < optionsArray.length; i++) {
+      optionsArray[i].disabled = !dataObject[selectElement].includes(optionsArray[i].value);
     }
-    return optionsArray[t];
+    return optionsArray[i];
   }
 
   function synchronizeRoomGuests() {
@@ -73,19 +73,19 @@
     }
   }
 
-  function syncValues(element, value) {
+  function synchronizeValues(element, value) {
     element.value = value;
   }
 
-  window.synchronizeFields(checkIn, checkOut, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
-  window.synchronizeFields(checkOut, checkIn, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
+  window.synchronizeFields(checkIn, checkOut, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], synchronizeValues);
+  window.synchronizeFields(checkOut, checkIn, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], synchronizeValues);
 
   type.addEventListener('change', synchronizeTypePrice);
   roomNumber.addEventListener('input', synchronizeRoomGuests);
   price.addEventListener('change', checkPrice);
   formSubmit.addEventListener('click', checkValidity);
 
-  var successHandler = function () {
+  var successMessage = function () {
     var node = document.createElement('div');
     node.style = 'position: fixed; padding: 10px;' +
       'z-index: 100; top: 50%; left: 50%; transform: translate(-50%, -50%);' +
@@ -95,12 +95,12 @@
     document.body.insertAdjacentElement('afterbegin', node);
     setTimeout(function () {
       document.body.removeChild(node);
-      noticeForm.reset();
     }, 2000);
   };
 
   noticeForm.addEventListener('submit', function (evt) {
-    window.send(new FormData(noticeForm), successHandler, window.errorHandler);
+    window.send(new FormData(noticeForm), successMessage, window.returnInactive, window.errorHandler);
     evt.preventDefault();
   });
+  noticeForm.addEventListener('reset', window.returnInactive);
 })();
