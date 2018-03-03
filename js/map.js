@@ -114,15 +114,10 @@
 
   function setHousingPriceValue(object) { // Функция приведения цен к общему значению
     var price = object.offer.price;
-    if (housingPrice.value === 'middle' && price === Math.max(10000, Math.min(price, 50000))) {
-      return true;
-    } else if (housingPrice.value === 'low' && price === Math.min(price, 10000)) {
-      return true;
-    } else if (housingPrice.value === 'high' && price === Math.max(price, 50000)) {
-      return true;
-    } else if (housingPrice.value === 'any') {
-      return true;
-    } return false;
+    return housingPrice.value === 'middle' && price === Math.max(10000, Math.min(price, 50000)) ||
+      housingPrice.value === 'low' && price === Math.min(price, 10000) ||
+      housingPrice.value === 'high' && price === Math.max(price, 50000) ||
+      housingPrice.value === 'any';
   }
 
   var checkedFeatures = [];
