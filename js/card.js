@@ -9,14 +9,14 @@
 
   function translateToRus(object) {
     object = object.offer.type;
-    var rusNames = {
+    var RusNames = {
       bungalo: 'Сарай',
       flat: 'Квартира',
       house: 'Дом'
     };
-    for (var key in rusNames) {
+    for (var key in RusNames) {
       if (object === key) {
-        object = rusNames[key];
+        object = RusNames[key];
       }
     }
     return object;

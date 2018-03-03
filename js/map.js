@@ -20,7 +20,7 @@
     }
   }
 
-  window.load(successHandler, window.errorHandler);
+  window.backend.load(successHandler, window.backend.errorHandler);
 
   // Клик на главную кнопку
   function onButtonClick() {
@@ -109,8 +109,8 @@
 
   var housingType = document.querySelector('#housing-type');
   var housingPrice = document.querySelector('#housing-price');
-  var housingRooms = document.querySelector('#housing-rooms');
-  var housingGuests = document.querySelector('#housing-guests');
+  var housingRoom = document.querySelector('#housing-rooms');
+  var housingGuest = document.querySelector('#housing-guests');
 
   function setHousingPriceValue(object) { // Функция приведения цен к общему значению
     var price = object.offer.price;
@@ -154,8 +154,8 @@
   function filterData() { // Подбор удоблетворяющих требованиям отелей
     for (var i = 0; i < mapPin.length; i++) {
       if ((objects[i].offer.type === housingType.value || housingType.value === 'any') &&
-        (objects[i].offer.rooms.toString() === housingRooms.value || housingRooms.value === 'any') &&
-        (objects[i].offer.guests.toString() === housingGuests.value || housingGuests.value === 'any') &&
+        (objects[i].offer.rooms.toString() === housingRoom.value || housingRoom.value === 'any') &&
+        (objects[i].offer.guests.toString() === housingGuest.value || housingGuest.value === 'any') &&
         (setHousingPriceValue(objects[i]) === true) &&
         (getDifferenceElement(objects[i].offer.features, checkedFeatures) === 0)) {
         if (checkCountPin() < MAX_ITEM_COUNT) {

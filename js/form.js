@@ -99,7 +99,7 @@
   };
 
   noticeForm.addEventListener('submit', function (evt) {
-    window.send(new FormData(noticeForm), successMessage, window.returnInactive, window.errorHandler);
+    window.backend.send(new FormData(noticeForm), successMessage, window.returnInactive, window.backend.errorHandler);
     evt.preventDefault();
   });
   noticeForm.addEventListener('reset', window.returnInactive);
