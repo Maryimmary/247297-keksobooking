@@ -1,5 +1,30 @@
 'use strict';
 (function () {
+  var CapacityToEnabledOptions = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
+  };
+
+  var PriceData = {
+    flat: {
+      min: 1000,
+      value: 1000
+    },
+    bungalo: {
+      min: 0,
+      value: 0
+    },
+    house: {
+      min: 5000,
+      value: 5000
+    },
+    palace: {
+      min: 10000,
+      value: 10000
+    }
+  };
   var inputAdvert = document.querySelectorAll('.notice input');
   var price = document.querySelector('#price');
   var type = document.querySelector('#type');
@@ -21,28 +46,10 @@
   }
 
   function synchronizeTypePrice() {
-    var priceData = {
-      flat: {
-        min: 1000,
-        value: 1000
-      },
-      bungalo: {
-        min: 0,
-        value: 0
-      },
-      house: {
-        min: 5000,
-        value: 5000
-      },
-      palace: {
-        min: 10000,
-        value: 10000
-      }
-    };
     var index = type.selectedIndex;
     var valueType = type[index].value;
-    price.min = priceData[valueType].min;
-    price.value = priceData[valueType].value;
+    price.min = PriceData[valueType].min;
+    price.value = PriceData[valueType].value;
   }
 
   function enabledOptions(selectElement, optionsArray, dataObject) {
@@ -53,16 +60,10 @@
   }
 
   function synchronizeRoomGuests() {
-    var capacityToEnabledOptions = {
-      '1': ['1'],
-      '2': ['1', '2'],
-      '3': ['1', '2', '3'],
-      '100': ['0']
-    };
     var roomValue = roomNumber.value;
     capacity.value = roomValue.substr(-1);
     var capacityOptions = capacity.options;
-    enabledOptions(roomValue, capacityOptions, capacityToEnabledOptions);
+    enabledOptions(roomValue, capacityOptions, CapacityToEnabledOptions);
   }
 
   function checkValidity() {
@@ -85,21 +86,8 @@
   price.addEventListener('change', checkPrice);
   formSubmit.addEventListener('click', checkValidity);
 
-  var successMessage = function () {
-    var node = document.createElement('div');
-    node.style = 'position: fixed; padding: 10px;' +
-      'z-index: 100; top: 50%; left: 50%; transform: translate(-50%, -50%);' +
-      'text-align: center; background-color: rgba(0, 191, 255, 0.5); ' +
-      'color: white; font-size: 30px; font-weight: bold;';
-    node.textContent = 'Данные успешно отправлены';
-    document.body.insertAdjacentElement('afterbegin', node);
-    setTimeout(function () {
-      document.body.removeChild(node);
-    }, 2000);
-  };
-
   noticeForm.addEventListener('submit', function (evt) {
-    window.backend.send(new FormData(noticeForm), successMessage, window.returnInactive, window.backend.errorHandler);
+    window.backend.send(new FormData(noticeForm), window.messages.success, window.returnInactive, window.messages.error);
     evt.preventDefault();
   });
   noticeForm.addEventListener('reset', window.returnInactive);

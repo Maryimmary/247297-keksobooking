@@ -20,7 +20,7 @@
     }
   }
 
-  window.backend.load(successHandler, window.backend.errorHandler);
+  window.backend.load(successHandler, window.messages.error);
 
   // Клик на главную кнопку
   function onButtonClick() {

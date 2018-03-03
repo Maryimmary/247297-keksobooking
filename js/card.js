@@ -10,12 +10,12 @@
   function translateToRus(object) {
     object = object.offer.type;
     var RusNames = {
-      bungalo: 'Сарай',
-      flat: 'Квартира',
-      house: 'Дом'
+      BUNGALO: 'Сарай',
+      FLAT: 'Квартира',
+      HOUSE: 'Дом'
     };
     for (var key in RusNames) {
-      if (object === key) {
+      if (object === key.toLowerCase()) {
         object = RusNames[key];
       }
     }
