@@ -17,13 +17,19 @@
     reader.readAsDataURL(file);
   });
 
-
   photoChooser.addEventListener('change', function () {
-    var files = photoChooser.files;
+    var file = photoChooser.files;
     var reader = new FileReader();
     reader.addEventListener('load', function () {
-
+      for (var i = 0; i < file.length; i++) {
+        var img = document.createElement('img');
+        img[i].classList.add('form__user-photo');
+        img[i].style = 'height: 70px; width: auto';
+        img[i].file = file[i];
+        photoContainer.appendChild(img[i]);
+        img[i].src = reader.result;
+        reader.readAsDataURL(file[i]);
+      }
     });
-    reader.readAsDataURL(files);
   });
 })();
