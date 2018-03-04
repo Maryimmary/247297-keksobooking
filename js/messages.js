@@ -22,7 +22,7 @@
       var node = document.createElement('div');
       node.style = 'position: fixed; padding: 10px;' +
         'z-index: 100; top: 50%; left: 50%; transform: translate(-50%, -50%);' +
-        'text-align: center; background-color: rgba(255, 99, 71, 0.5); ' +
+        'text-align: center; background-color: rgba(255, 99, 71, 0.8); ' +
         'color: white; font-size: 30px; font-weight: bold;';
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);

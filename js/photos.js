@@ -1,26 +1,29 @@
 'use strict';
 
 (function () {
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  // Аватар
+  var avatarChooser = document.querySelector('#avatar');
+  var avatarPreview = document.querySelector('.notice__preview img');
+  // Фотографии
+  var photoChooser = document.querySelector('#images');
+  var photoContainer = document.querySelector('.form__photo-container');
 
-  var fileChooser = document.querySelector('#avatar');
-  var preview = document.querySelector('.notice__preview');
-
-  fileChooser.addEventListener('change', function () {
-    var file = fileChooser.files[0];
-    var fileName = file.name.toLowerCase();
-
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.slice(fileName.indexOf('.') + 1) === it;
+  avatarChooser.addEventListener('change', function () {
+    var file = avatarChooser.files[0];
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+      avatarPreview.src = reader.result;
     });
-    if (matches) {
-      var reader = new FileReader();
+    reader.readAsDataURL(file);
+  });
 
-      reader.addEventListener('load', function () {
-        preview.querySelector('img').src = reader.result;
-      });
 
-      reader.readAsDataURL(file);
-    }
+  photoChooser.addEventListener('change', function () {
+    var files = photoChooser.files;
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+
+    });
+    reader.readAsDataURL(files);
   });
 })();
