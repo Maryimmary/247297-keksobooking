@@ -46,6 +46,7 @@
     window.mainPin.style = 'left: 600px; top: 375px';
     for (var i = 0; i < mapPin.length; i++) {
       mapPin[i].style.display = 'none';
+      popup[i].style.display = 'none';
     }
     noticeForm.reset();
     filterForm.reset();
@@ -113,7 +114,7 @@
   var housingGuest = document.querySelector('#housing-guests');
 
   function setHousingPriceValue(object) { // Функция приведения цен к общему значению
-    var price = object.offer.price;
+    var price = object;
     return housingPrice.value === 'middle' && price === Math.max(10000, Math.min(price, 50000)) ||
       housingPrice.value === 'low' && price === Math.min(price, 10000) ||
       housingPrice.value === 'high' && price === Math.max(price, 50000) ||
@@ -151,8 +152,8 @@
       if ((objects[i].offer.type === housingType.value || housingType.value === 'any') &&
         (objects[i].offer.rooms.toString() === housingRoom.value || housingRoom.value === 'any') &&
         (objects[i].offer.guests.toString() === housingGuest.value || housingGuest.value === 'any') &&
-        (setHousingPriceValue(objects[i]) === true) &&
-        (getDifferenceElement(objects[i].offer.features, checkedFeatures) === 0)) {
+        (setHousingPriceValue(objects[i].offer.price)) &&
+        (!getDifferenceElement(objects[i].offer.features, checkedFeatures))) {
         if (checkCountPin() < MAX_ITEM_COUNT) {
           mapPin[i].style.display = 'block';
         }

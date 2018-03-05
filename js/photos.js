@@ -17,15 +17,14 @@
     reader.readAsDataURL(file);
   });
 
-  photoChooser.addEventListener('change', function () {
+  photoChooser.addEventListener('change', function (event) {
     if (window.File && window.FileList && window.FileReader) {
-
       var files = event.target.files;
       for (var i = 0; i < files.length; i++) {
         var file = files[i];
         var multiReader = new FileReader();
-        multiReader.addEventListener('load', function (event) {
-          var picFile = event.target;
+        multiReader.addEventListener('load', function (evt) {
+          var picFile = evt.target;
           var img = document.createElement('img');
           img.classList.add('form__user-photo');
           img.style = 'height: 70px; width: auto';
