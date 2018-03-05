@@ -5,31 +5,12 @@
   var objects = [];
 
   var map = document.querySelector('.map');
+  window.mainPin = document.querySelector('.map__pin--main');
   var mapPinsContainer = document.querySelector('.map__container');
   var mapPin = mapPinsContainer.getElementsByTagName('button');
   var popup = map.getElementsByTagName('article');
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormElement = document.querySelectorAll('.notice__form fieldset');
-
-  window.globalProperies = {
-    mainPin: document.querySelector('.map__pin--main'),
-    onFormReset: function () { // Приведение элементов в исходное состояние при сбросе формы
-      map.classList.add('map--faded');
-      this.mainPin.style = 'left: 600px; top: 375px';
-      for (var i = 0; i < mapPin.length; i++) {
-        mapPin[i].style.display = 'none';
-        popup[i].style.display = 'none';
-      }
-      noticeForm.reset();
-      filterForm.reset();
-      window.fileChooser.avatar.files.length = 0;
-      window.fileChooser.photo.files.length = 0;
-      noticeForm.classList.add('notice__form--disabled');
-      Array.from(noticeFormElement).forEach(function (it) {
-        it.disabled = true;
-      });
-    }
-  };
 
   function onSuccessLoad(data) {
     for (var i = 0; i < data.length; i++) {
@@ -42,15 +23,32 @@
     }
   }
 
+  // Приведение элементов в исходное состояние при сбросе формы
+  window.onFormReset = function () {
+    map.classList.add('map--faded');
+    window.mainPin.style = 'left: 600px; top: 375px';
+    for (var i = 0; i < mapPin.length; i++) {
+      mapPin[i].style.display = 'none';
+      popup[i].style.display = 'none';
+    }
+    noticeForm.reset();
+    filterForm.reset();
+    window.fileChooser.avatar.value = '';
+    noticeForm.classList.add('notice__form--disabled');
+    Array.from(noticeFormElement).forEach(function (it) {
+      it.disabled = true;
+    });
+  };
+
   // Клик на главную кнопку
   function onButtonClick() {
     if (map.classList.contains('map--faded')) {
+      window.backend.load(onSuccessLoad, window.messages.error);
       map.classList.remove('map--faded');
       noticeForm.classList.remove('notice__form--disabled');
       Array.from(noticeFormElement).forEach(function (it) {
         it.disabled = false;
       });
-      window.backend.load(onSuccessLoad, window.messages.error);
     }
   }
 
@@ -92,7 +90,7 @@
   }
 
   map.addEventListener('click', onCardToggle);
-  window.globalProperies.mainPin.addEventListener('mouseup', onButtonClick);
+  window.mainPin.addEventListener('mouseup', onButtonClick);
 
   // Управление фильтрами отелей, загруженных с сервера
   var filterForm = document.querySelector('.map__filters');
