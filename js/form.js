@@ -35,7 +35,7 @@
   var noticeForm = document.querySelector('.notice__form');
   var formSubmit = document.querySelector('.notice__form .form__submit');
 
-  function checkPrice() { // Синхронизация  поля цены
+  function onPriceFieldChange() { // Синхронизация  поля цены
     if (price.value === 0) {
       price.setCustomValidity('Минимальная цена - 0 рублей');
     } else if (price.value === 1000000) {
@@ -45,31 +45,33 @@
     }
   }
 
-  function synchronizeTypePrice() {
+  function onTypeFieldChange() {
     var index = type.selectedIndex;
     var valueType = type[index].value;
     price.min = PriceData[valueType].min;
     price.value = PriceData[valueType].value;
   }
 
-  function enabledOptions(selectElement, optionsArray, dataObject) {
+  function enableOptions(selectElement, optionsArray, dataObject) {
     for (var i = 0; i < optionsArray.length; i++) {
       optionsArray[i].disabled = !dataObject[selectElement].includes(optionsArray[i].value);
     }
     return optionsArray[i];
   }
 
-  function synchronizeRoomGuests() {
+  function onRoomFildSelect() {
     var roomValue = roomNumber.value;
     capacity.value = roomValue.substr(-1);
     var capacityOptions = capacity.options;
-    enabledOptions(roomValue, capacityOptions, CapacityToEnabledOptions);
+    enableOptions(roomValue, capacityOptions, CapacityToEnabledOptions);
   }
 
   function checkValidity() {
-    for (var l = 0; l < inputAdvert.length; l++) {
-      if (!inputAdvert[l].validity.valid) {
-        inputAdvert[l].style.border = '2px solid red';
+    for (var i = 0; i < inputAdvert.length; i++) {
+      if (!inputAdvert[i].validity.valid) {
+        inputAdvert[i].style.border = '2px solid red';
+      } else {
+        inputAdvert[i].style.border = '2px solid transparent';
       }
     }
   }
@@ -81,14 +83,13 @@
   window.synchronizeFields(checkIn, checkOut, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], synchronizeValues);
   window.synchronizeFields(checkOut, checkIn, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], synchronizeValues);
 
-  type.addEventListener('change', synchronizeTypePrice);
-  roomNumber.addEventListener('input', synchronizeRoomGuests);
-  price.addEventListener('change', checkPrice);
+  type.addEventListener('change', onTypeFieldChange);
+  roomNumber.addEventListener('input', onRoomFildSelect);
+  price.addEventListener('change', onPriceFieldChange);
   formSubmit.addEventListener('click', checkValidity);
-
   noticeForm.addEventListener('submit', function (evt) {
-    window.backend.send(new FormData(noticeForm), window.messages.success, window.returnInactive, window.messages.error);
+    window.backend.send(new FormData(noticeForm), window.messages.success, window.onFormReset, window.messages.error);
     evt.preventDefault();
   });
-  noticeForm.addEventListener('reset', window.returnInactive);
+  noticeForm.addEventListener('reset', window.onFormReset);
 })();
