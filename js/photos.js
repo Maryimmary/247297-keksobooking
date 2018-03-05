@@ -7,6 +7,8 @@
   // Фотографии
   var photoChooser = document.querySelector('#images');
   var photoContainer = document.querySelector('.form__photo-container');
+  // Drag&Drop
+  var dropZone = document.querySelectorAll('.drop-zone');
 
   avatarChooser.addEventListener('change', function () {
     var file = avatarChooser.files[0];
@@ -25,12 +27,12 @@
         var multiReader = new FileReader();
         multiReader.addEventListener('load', function (evt) {
           var picFile = evt.target;
-          var img = document.createElement('img');
-          img.classList.add('form__user-photo');
-          img.style = 'height: 70px; width: auto';
-          img.src = picFile.result;
-          img.title = picFile.name;
-          photoContainer.appendChild(img);
+          var div = document.createElement('div');
+          div.innerHTML = '<img src="' + picFile.result + '" title="' + picFile.name + '" style="width: 100%; height: auto">';
+          div.classList.add('form__user-photo');
+          div.style = 'height: 70px; width: 126px; overflow: hidden; border: solid 1px #c7c7c7; border-radius: 5px;';
+          div.draggable = 'true';
+          photoContainer.appendChild(div);
         });
         multiReader.readAsDataURL(file);
       }
