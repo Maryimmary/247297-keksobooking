@@ -13,7 +13,7 @@
 
   window.globalProperies = {
     mainPin: document.querySelector('.map__pin--main'),
-    onFormReset: function () {
+    onFormReset: function () { // Приведение элементов в исходное состояние при сбросе формы
       map.classList.add('map--faded');
       this.mainPin.style = 'left: 600px; top: 375px';
       for (var i = 0; i < mapPin.length; i++) {
@@ -44,29 +44,15 @@
 
   // Клик на главную кнопку
   function onButtonClick() {
-    map.classList.remove('map--faded');
-    noticeForm.classList.remove('notice__form--disabled');
-    Array.from(noticeFormElement).forEach(function (it) {
-      it.disabled = false;
-    });
-    window.backend.load(onSuccessLoad, window.messages.error);
-  }
-
-  // Приведение элементов в исходное состояние при сбросе формы
-  window.onFormReset = function () {
-    map.classList.add('map--faded');
-    window.globalProperies.mainPin.style = 'left: 600px; top: 375px';
-    for (var i = 0; i < mapPin.length; i++) {
-      mapPin[i].style.display = 'none';
-      popup[i].style.display = 'none';
+    if (map.classList.contains('map--faded')) {
+      map.classList.remove('map--faded');
+      noticeForm.classList.remove('notice__form--disabled');
+      Array.from(noticeFormElement).forEach(function (it) {
+        it.disabled = false;
+      });
+      window.backend.load(onSuccessLoad, window.messages.error);
     }
-    noticeForm.reset();
-    filterForm.reset();
-    noticeForm.classList.add('notice__form--disabled');
-    Array.from(noticeFormElement).forEach(function (it) {
-      it.disabled = true;
-    });
-  };
+  }
 
   // Функции, определющию поведение карточек
   function onPopupEscPress(evt) {
