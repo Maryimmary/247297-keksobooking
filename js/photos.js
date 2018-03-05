@@ -1,15 +1,13 @@
 'use strict';
 
 (function () {
-  window.fileChooser = {
-    avatar: document.querySelector('#avatar'),
-    photo: document.querySelector('#images')
-  };
+  var avatar = document.querySelector('#avatar');
+  var photo = document.querySelector('#images');
   var avatarPreview = document.querySelector('.notice__preview img');
   var photoContainer = document.querySelector('.form__photo-container');
 
-  window.fileChooser.avatar.addEventListener('change', function () {
-    var file = window.fileChooser.avatar.files[0];
+  avatar.addEventListener('change', function () {
+    var file = avatar.files[0];
     var reader = new FileReader();
     reader.addEventListener('load', function () {
       avatarPreview.src = reader.result;
@@ -17,7 +15,7 @@
     reader.readAsDataURL(file);
   });
 
-  window.fileChooser.photo.addEventListener('change', function (event) {
+  photo.addEventListener('change', function (event) {
     if (window.File && window.FileList && window.FileReader) {
       var files = event.target.files;
       for (var i = 0; i < files.length; i++) {

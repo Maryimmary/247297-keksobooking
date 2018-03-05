@@ -33,7 +33,6 @@
     }
     noticeForm.reset();
     filterForm.reset();
-    window.fileChooser.avatar.value = '';
     noticeForm.classList.add('notice__form--disabled');
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = true;
