@@ -29,7 +29,7 @@
     }
   };
 
-  function successHandler(data) {
+  function onSuccessLoad(data) {
     for (var i = 0; i < data.length; i++) {
       map.insertBefore(window.addCard(data[i]), map.lastElementChild);
       mapPinsContainer.appendChild(window.addPin(data[i]));
@@ -37,7 +37,7 @@
     }
   }
 
-  window.backend.load(successHandler, window.messages.error);
+  window.backend.load(onSuccessLoad, window.messages.error);
 
   // Клик на главную кнопку
   function onButtonClick() {
