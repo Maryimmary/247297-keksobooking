@@ -22,6 +22,8 @@
       }
       noticeForm.reset();
       filterForm.reset();
+      window.fileChooser.avatar.files.length = 0;
+      window.fileChooser.photo.files.length = 0;
       noticeForm.classList.add('notice__form--disabled');
       Array.from(noticeFormElement).forEach(function (it) {
         it.disabled = true;
@@ -35,26 +37,19 @@
       mapPinsContainer.appendChild(window.addPin(data[i]));
       objects.push(data[i]);
     }
+    for (var j = 0; j < Math.min(mapPinsContainer.children.length, MAX_ITEM_COUNT); j++) {
+      mapPinsContainer.children[j].style.display = 'block';
+    }
   }
-
-  window.backend.load(onSuccessLoad, window.messages.error);
 
   // Клик на главную кнопку
   function onButtonClick() {
-    if (map.classList.contains('map--faded') && mapPin.length) {
-      map.classList.remove('map--faded');
-      for (var i = 0; i < Math.min(mapPin.length, MAX_ITEM_COUNT); i++) {
-        if (checkCountPin() < MAX_ITEM_COUNT) {
-          mapPin[i].style.display = 'block';
-        } else {
-          return;
-        }
-      }
-    }
+    map.classList.remove('map--faded');
     noticeForm.classList.remove('notice__form--disabled');
     Array.from(noticeFormElement).forEach(function (it) {
       it.disabled = false;
     });
+    window.backend.load(onSuccessLoad, window.messages.error);
   }
 
   // Приведение элементов в исходное состояние при сбросе формы

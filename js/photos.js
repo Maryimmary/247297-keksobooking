@@ -1,17 +1,15 @@
 'use strict';
 
 (function () {
-  // Аватар
-  var avatarChooser = document.querySelector('#avatar');
+  window.fileChooser = {
+    avatar: document.querySelector('#avatar'),
+    photo: document.querySelector('#images')
+  };
   var avatarPreview = document.querySelector('.notice__preview img');
-  // Фотографии
-  var photoChooser = document.querySelector('#images');
   var photoContainer = document.querySelector('.form__photo-container');
-  // Drag&Drop
-  var dropZone = document.querySelectorAll('.drop-zone');
 
-  avatarChooser.addEventListener('change', function () {
-    var file = avatarChooser.files[0];
+  window.fileChooser.avatar.addEventListener('change', function () {
+    var file = window.fileChooser.avatar.files[0];
     var reader = new FileReader();
     reader.addEventListener('load', function () {
       avatarPreview.src = reader.result;
@@ -19,7 +17,7 @@
     reader.readAsDataURL(file);
   });
 
-  photoChooser.addEventListener('change', function (event) {
+  window.fileChooser.photo.addEventListener('change', function (event) {
     if (window.File && window.FileList && window.FileReader) {
       var files = event.target.files;
       for (var i = 0; i < files.length; i++) {
