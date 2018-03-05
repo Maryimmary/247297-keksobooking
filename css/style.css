@@ -703,7 +703,7 @@ textarea:focus
 .notice__form .upload
 {
     display: flex;
-
+    align-items: flex-start;
     min-height: 70px;
 }
 
@@ -734,8 +734,11 @@ textarea:focus
 }
 
 .form__photo-container
-{
-    width: 140px;
+{   display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    width: calc(100% - 20px);
 }
 
 .form__element--submit
